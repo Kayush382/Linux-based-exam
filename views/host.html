@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Host</title>
+</head>
+<body>
+    {{ template "_navbar.html" . }}
+
+    <br><br>
+{{ if .Port1 }}
+    <div class="row" id="your_session">
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1" >
+          <div class="card-content white-text">
+            <span class="card-title">Hola {{ .Email }}, Your session</span>
+            <p><strong>Shell 1: </strong> {{ .Image1 }} at port {{ .Port1 }} </p>
+            <p><strong>Shell 2: </strong> {{ .Image2 }} at port {{ .Port2 }} </p>
+          </div>
+          <div class="card-action">
+            <button id="remove_session">Delete session</button>
+            <button id="view-session">Go to session</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{{ else }}
+
+    <div class="row" id="create_new">
+            <form class="col s12" action="/host" method="post">
+              <div class="row">
+                <div class="input-field col s6">
+                        <input type="text" class="validate" id="port1" name="port1">
+                        <label for="port1">port1</label>
+                      </div>
+
+                      <div class="input-field col s6">
+                        <input type="text" class="validate" id="port2"  name="port2">
+                        <label for="port2">port2</label>
+                      </div>
+                      <!-- <div class="input-field col s6">
+                        <input type="text" class="validate" id="image1" name="image1">
+                        <label for="image1">image1</label>
+                      </div> -->
+                      <div class="input-field col s12">
+                        <select name="image1">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="alpine">alpine</option>
+                            <option value="ubuntu">ubuntu</option>
+                            <option value="kalilinux/kali-linux-docker">kalilinux/kali-linux-docker</option>
+                            <option value="linuxkonsult/kali-metasploit">linuxkonsult/kali-metasploit</option>
+                            <option value="debian">debian</option>
+                            <option value="centos">centos</option>
+                        </select>
+                        <label>Select image 1</label>
+                      </div>
+
+                      <div class="input-field col s12">
+                          <select name="image2">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="alpine">alpine</option>
+                            <option value="ubuntu">ubuntu</option>
+                            <option value="kalilinux/kali-linux-docker">kalilinux/kali-linux-docker</option>
+                            <option value="linuxkonsult/kali-metasploit">linuxkonsult/kali-metasploit</option>
+                            <option value="debian">debian</option>
+                            <option value="centos">centos</option>
+                          </select>
+                          <label>Select image 2</label>
+                        </div>
+
+                        <div class="channel">
+                            <input type="text" class="validate" id="channel" name="channel">
+                            <label for="channel">channel</label>
+                          </div>
+                          <!-- <div class="input-field col s6">
+                            <input type="text" class="validate" id="image2" name="image2">
+                            <label for="image2">image2</label>
+                          </div> -->
+                          
+              </div>
+              <center><button type="submit" class="btn" id="host-submit">Submit</button></center>
+            </form>
+          </div>
+  {{ end }}
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+           <!-- Compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+ <!-- Compiled and minified JavaScript -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+          <script>
+
+            $(document).ready(()=>{
+   
+              $('select').formSelect();
+              $("#remove_session").on("click", (e)=>{
+                e.preventDefault();
+                $.post("/host/session/delete", JSON.stringify({
+                  email    : "{{ .Email }}",
+	                password : "{{ .Password }}",
+	                port1    : "{{ .Port1 }}",
+	                port2    : "{{ .Port2 }}",
+	                image1   : "{{ .Image1 }}",
+	                image2   : "{{ .Image2 }}",
+	                hosting  : "{{ .Hosting }}"
+                }), (resp)=>{
+                  //console.log(resp)
+                  alert(resp)
+                  if (resp=="Deleted")
+                    window.location.replace("/host")
+                 
+                })
+              })
+
+              $("#view-session").on("click",(e)=>{
+                e.preventDefault()
+                $.post("/host/session/view", JSON.stringify({
+                  Email: "{{ .Email }}",
+                  Port1: "{{ .Port1 }}",
+                  Port2: "{{ .Port2 }}",
+                  Image1: "{{ .Image1 }}",
+                  Image2: "{{ .Image2 }}",
+                  Hosting: "{{ .Hosting }}"
+                }), (resp)=>{
+                  $("body").html(resp)
+                })
+              })
+
+            })
+          </script>
+</body>
+</html>

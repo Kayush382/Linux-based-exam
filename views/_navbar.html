@@ -1,0 +1,25 @@
+
+{{ if .Email }}
+<nav>
+    <div class="nav-wrapper">
+      <!-- <a href="#" class="brand-logo right">Logo</a> -->
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a href="/host">Manage your sessions {{ .Email }}</a></li>
+        <li><a href="/host/logout">logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+{{ else }}
+<nav>
+    <div class="nav-wrapper">
+      <!-- <a href="#" class="brand-logo right">Logo</a> -->
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a href="/host/signup">Host signup</a></li>
+        <li><a href="/host/login">Host login</a></li>
+      </ul>
+    </div>
+  </nav>
+{{ end }}
